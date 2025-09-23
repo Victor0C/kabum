@@ -58,7 +58,7 @@ class CustomerService
       throw new Exception("Cliente não encontrado", 404);
     }
 
-    $customer['addresses'] = $this->addressRepo->find($id);
+    $customer['addresses'] = $this->addressRepo->getByCustomerId($id);
     return $customer;
   }
 

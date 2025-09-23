@@ -14,11 +14,10 @@ class CustomerController extends RenderViews
     $this->loadView('Customers/list-customers', ['customers' => $customers]);
   }
 
-  public function viewCustomerDetails()
+  public function viewCustomerDetails(array $params)
   {
     try {
-      $requestData = $_GET;
-      $id = $requestData['id'] ?? 0;
+      $id = $params['id'] ?? 0;
       $customer = (new CustomerService)->find((int) $id);
       $this->loadView('Customers/customers-details', ['customer' => $customer]);
     } catch (\Throwable $e) {
