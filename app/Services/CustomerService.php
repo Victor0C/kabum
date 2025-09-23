@@ -16,12 +16,9 @@ class CustomerService
 
   public function create(array $data): array
   {
-    $existing = $this->customerRepo->where([
-      ['column' => 'cpf', 'value' => $data['cpf'], 'boolean' => 'OR'],
-      ['column' => 'rg', 'value' => $data['rg']]
-    ]);
+    $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg']);
 
-    if (!empty($existing)) {
+    if ($existing) {
       throw new Exception("Já existe um cliente cadastrado com este CPF ou RG.", 422);
     }
 
@@ -53,14 +50,14 @@ class CustomerService
     return $customer;
   }
 
-  public function getOne(int $id): ?array
+  public function find(int $id): ?array
   {
     $customer = $this->customerRepo->find($id);
     if (!$customer) {
       throw new Exception("Cliente não encontrado", 404);
     }
 
-    $customer['addresses'] = $this->enderecoRepo->where(['customer_id' => $id]);
+    $customer['addresses'] = $this->enderecoRepo->find($id);
     return $customer;
   }
 
@@ -69,7 +66,7 @@ class CustomerService
     $customers = $this->customerRepo->all();
 
     foreach ($customers as &$customer) {
-      $customer['addresses'] = $this->enderecoRepo->where(['customer_id' => $customer['id']]);
+      $customer['addresses'] = $this->enderecoRepo->getByCustomerId($customer['id']);
     }
 
     return $customers;
@@ -77,15 +74,10 @@ class CustomerService
 
   public function update(int $id, array $data): array
   {
-    $existing = $this->customerRepo->where([
-      ['column' => 'cpf', 'value' => $data['cpf'], 'boolean' => 'OR'],
-      ['column' => 'rg', 'value' => $data['rg']]
-    ]);
+    $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg']);
 
-    foreach ($existing as $e) {
-      if ($e['id'] != $id) {
-        throw new Exception("Já existe outro cliente cadastrado com este CPF ou RG.", 422);
-      }
+    if ($existing) {
+      throw new Exception("Já existe outro cliente cadastrado com este CPF ou RG.", 422);
     }
 
     $customer = $this->customerRepo->update($id, [
@@ -112,7 +104,7 @@ class CustomerService
 
   public function delete(int $id): bool
   {
-    $this->getOne($id);
+    $this->find($id);
     return $this->customerRepo->delete($id);
   }
 }

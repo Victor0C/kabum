@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../../Database.php';
+
 abstract class BaseRepository
 {
   protected PDO $pdo;
@@ -87,34 +89,4 @@ abstract class BaseRepository
     return $stmt->execute(['id' => $id]);
   }
 
-  public function where(array $conditions): array
-  {
-    $clauses = [];
-    $bindings = [];
-
-    foreach ($conditions as $index => $cond) {
-      if (is_array($cond) && isset($cond['column'], $cond['value'])) {
-        $operator = $cond['operator'] ?? '=';
-        $boolean = strtoupper($cond['boolean'] ?? 'AND');
-        $key = $cond['column'] . '_' . $index;
-
-        $clauses[] = ($index === 0 ? '' : " $boolean ") . "{$cond['column']} $operator :$key";
-        $bindings[$key] = $cond['value'];
-      } elseif (is_scalar($cond)) {
-        $key = $index;
-        $clauses[] = "$index = :$key";
-        $bindings[$key] = $cond;
-      }
-    }
-
-    $sql = "SELECT * FROM {$this->table}";
-    if (!empty($clauses)) {
-      $sql .= " WHERE " . implode('', $clauses);
-    }
-
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute($bindings);
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
 }

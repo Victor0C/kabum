@@ -9,9 +9,9 @@ class UpdateCustomerRequest implements RequestInterface
     $errors = [];
     $validated = [];
 
-    if (isset($data['nome']) && $data['nome'] !== '') {
-      $validated['name'] = $data['nome'];
-    } elseif (isset($data['nome']) && $data['nome'] === '') {
+    if (isset($data['name']) && $data['name'] !== '') {
+      $validated['name'] = $data['name'];
+    } elseif (isset($data['name']) && $data['name'] === '') {
       $errors['name'] = "O nome não pode ser vazio.";
     }
 
@@ -27,28 +27,28 @@ class UpdateCustomerRequest implements RequestInterface
       $validated['rg'] = $data['rg'];
     }
 
-    if (isset($data['data_nascimento']) && $data['data_nascimento'] !== '') {
-      if (!DateTime::createFromFormat('Y-m-d', $data['data_nascimento'])) {
+    if (isset($data['birth_date']) && $data['birth_date'] !== '') {
+      if (!DateTime::createFromFormat('Y-m-d', $data['birth_date'])) {
         $errors['birth_date'] = "A data de nascimento deve estar no formato YYYY-MM-DD.";
       } else {
-        $validated['birth_date'] = $data['data_nascimento'];
+        $validated['birth_date'] = $data['birth_date'];
       }
     }
 
-    if (isset($data['telefone']) && $data['telefone'] !== '') {
-      if (!preg_match('/^\d{10,11}$/', preg_replace('/\D/', '', $data['telefone']))) {
+    if (isset($data['phone']) && $data['phone'] !== '') {
+      if (!preg_match('/^\d{10,11}$/', preg_replace('/\D/', '', $data['phone']))) {
         $errors['phone'] = "O telefone deve ter 10 ou 11 dígitos.";
       } else {
-        $validated['phone'] = $data['telefone'];
+        $validated['phone'] = $data['phone'];
       }
     }
 
-    if (isset($data['enderecos'])) {
-      if (!is_array($data['enderecos']) || empty($data['enderecos'])) {
+    if (isset($data['addresses'])) {
+      if (!is_array($data['addresses']) || empty($data['addresses'])) {
         $errors['addresses'] = "É necessário informar ao menos um endereço.";
       } else {
         $validated['addresses'] = [];
-        foreach ($data['enderecos'] as $index => $address) {
+        foreach ($data['addresses'] as $index => $address) {
           if (!isset($address['id'])) {
             $errors["addresses.$index.id"] = "O ID do endereço é obrigatório.";
             continue;
@@ -60,24 +60,24 @@ class UpdateCustomerRequest implements RequestInterface
             $validAddress['zip'] = $address['cep'];
           }
 
-          if (isset($address['cidade']) && $address['cidade'] !== '') {
-            $validAddress['city'] = $address['cidade'];
+          if (isset($address['city']) && $address['city'] !== '') {
+            $validAddress['city'] = $address['city'];
           }
 
-          if (isset($address['pais']) && $address['pais'] !== '') {
-            $validAddress['country'] = $address['pais'];
+          if (isset($address['country']) && $address['country'] !== '') {
+            $validAddress['country'] = $address['country'];
           }
 
-          if (isset($address['logradouro']) && $address['logradouro'] !== '') {
-            $validAddress['street'] = $address['logradouro'];
+          if (isset($address['street']) && $address['street'] !== '') {
+            $validAddress['street'] = $address['street'];
           }
 
-          if (isset($address['bairro']) && $address['bairro'] !== '') {
-            $validAddress['neighborhood'] = $address['bairro'];
+          if (isset($address['neighborhood']) && $address['neighborhood'] !== '') {
+            $validAddress['neighborhood'] = $address['neighborhood'];
           }
 
-          if (isset($address['numero']) && $address['numero'] !== '') {
-            $validAddress['number'] = $address['numero'];
+          if (isset($address['number']) && $address['number'] !== '') {
+            $validAddress['number'] = $address['number'];
           }
 
           $validated['addresses'][] = $validAddress;

@@ -9,10 +9,10 @@ class CreateCustomerRequest implements RequestInterface
     $errors = [];
     $validated = [];
 
-    if (empty($data['nome'])) {
+    if (empty($data['name'])) {
       $errors['name'] = "O nome é obrigatório.";
     } else {
-      $validated['name'] = $data['nome'];
+      $validated['name'] = $data['name'];
     }
 
     if (empty($data['cpf'])) {
@@ -29,27 +29,27 @@ class CreateCustomerRequest implements RequestInterface
       $validated['rg'] = $data['rg'];
     }
 
-    if (empty($data['data_nascimento'])) {
+    if (empty($data['birth_date'])) {
       $errors['birth_date'] = "A data de nascimento é obrigatória.";
-    } elseif (!DateTime::createFromFormat('Y-m-d', $data['data_nascimento'])) {
+    } elseif (!DateTime::createFromFormat('Y-m-d', $data['birth_date'])) {
       $errors['birth_date'] = "A data de nascimento deve estar no formato YYYY-MM-DD.";
     } else {
-      $validated['birth_date'] = $data['data_nascimento'];
+      $validated['birth_date'] = $data['birth_date'];
     }
 
-    if (empty($data['telefone'])) {
+    if (empty($data['phone'])) {
       $errors['phone'] = "O telefone é obrigatório.";
-    } elseif (!preg_match('/^\d{10,11}$/', preg_replace('/\D/', '', $data['telefone']))) {
+    } elseif (!preg_match('/^\d{10,11}$/', preg_replace('/\D/', '', $data['phone']))) {
       $errors['phone'] = "O telefone deve ter 10 ou 11 dígitos.";
     } else {
-      $validated['phone'] = $data['telefone'];
+      $validated['phone'] = $data['phone'];
     }
 
-    if (empty($data['enderecos']) || !is_array($data['enderecos'])) {
+    if (empty($data['addresses']) || !is_array($data['addresses'])) {
       $errors['addresses'] = "É necessário informar ao menos um endereço.";
     } else {
       $validated['addresses'] = [];
-      foreach ($data['enderecos'] as $index => $address) {
+      foreach ($data['addresses'] as $index => $address) {
         $validAddress = [];
 
         if (empty($address['cep'])) {
@@ -58,34 +58,34 @@ class CreateCustomerRequest implements RequestInterface
           $validAddress['zip'] = $address['cep'];
         }
 
-        if (empty($address['cidade'])) {
+        if (empty($address['city'])) {
           $errors["addresses.$index.city"] = "A cidade é obrigatória.";
         } else {
-          $validAddress['city'] = $address['cidade'];
+          $validAddress['city'] = $address['city'];
         }
 
-        if (empty($address['pais'])) {
+        if (empty($address['country'])) {
           $errors["addresses.$index.country"] = "O país é obrigatório.";
         } else {
-          $validAddress['country'] = $address['pais'];
+          $validAddress['country'] = $address['country'];
         }
 
-        if (empty($address['logradouro'])) {
+        if (empty($address['street'])) {
           $errors["addresses.$index.street"] = "O logradouro é obrigatório.";
         } else {
-          $validAddress['street'] = $address['logradouro'];
+          $validAddress['street'] = $address['street'];
         }
 
-        if (empty($address['bairro'])) {
+        if (empty($address['neighborhood'])) {
           $errors["addresses.$index.neighborhood"] = "O bairro é obrigatório.";
         } else {
-          $validAddress['neighborhood'] = $address['bairro'];
+          $validAddress['neighborhood'] = $address['neighborhood'];
         }
 
-        if (empty($address['numero'])) {
+        if (empty($address['number'])) {
           $errors["addresses.$index.number"] = "O número é obrigatório.";
         } else {
-          $validAddress['number'] = $address['numero'];
+          $validAddress['number'] = $address['number'];
         }
 
         if (!empty($validAddress)) {
