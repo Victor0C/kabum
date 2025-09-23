@@ -45,7 +45,7 @@ class Core
 
     if (!$routerFound) {
       header("HTTP/1.0 404 Not Found");
-      echo "Rota não encontrada ou verbo HTTP inválido.";
+      echo "Rota não encontrada.";
     }
   }
 

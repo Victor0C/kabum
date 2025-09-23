@@ -186,8 +186,9 @@
           alert(errorData.message || 'Erro não catalogado');
           return;
         }
-        await response.json();
+
         alert('Cliente criado com sucesso!');
+        window.location.href = '/';
       })
       .catch(err => {
         console.error(err);
