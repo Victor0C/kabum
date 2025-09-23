@@ -1,6 +1,6 @@
 <?php
 
-class RenderView
+class RenderViews
 {
   private $layout = "Default";
 

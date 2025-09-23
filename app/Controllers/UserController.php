@@ -4,7 +4,7 @@ require_once __DIR__ . "/../Utils/RenderViews.php";
 
 session_start();
 
-class UserController extends RenderView
+class UserController extends RenderViews
 {
 
   public function viewUsers()
