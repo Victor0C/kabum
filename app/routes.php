@@ -1,5 +1,0 @@
-<?php
-
-$routes = [
-  '/' => 'UserController@viewUsers',
-];

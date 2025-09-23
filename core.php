@@ -12,35 +12,40 @@ class Core
   public function run()
   {
     $url = '/';
-
     isset($_GET['url']) ? $url .= $_GET['url'] : '';
-
     ($url != '/') ? $url = rtrim($url, '/') : $url;
 
+    $method = $_SERVER['REQUEST_METHOD'];
     $routerFound = false;
 
-    foreach ($this->getRoutes() as $path => $controllerAndAction) {
+    foreach ($this->getRoutes() as $route) {
+      [$routeMethod, $path, $controllerAndAction] = $route;
+      
+      if (strtoupper($method) !== strtoupper($routeMethod)) {
+        continue;
+      }
+
       $pattern = '#^' . preg_replace('/{id}/', '([\w-]+|\d+)', $path) . '$#';
 
       if (preg_match($pattern, $url, $matches)) {
         array_shift($matches);
-
         $routerFound = true;
 
         [$currentController, $action] = explode('@', $controllerAndAction);
-
         require_once __DIR__ . "/app/Controllers/$currentController.php";
-        
 
         $controller = new $currentController();
         $controller->$action($matches);
+        break; // rota encontrada, sai do loop
       }
     }
 
     if (!$routerFound) {
-      print_r('deu ruim, n achou a rota');
+      header("HTTP/1.0 404 Not Found");
+      echo "Rota não encontrada ou verbo HTTP inválido.";
     }
   }
+
 
   protected function getRoutes()
   {
