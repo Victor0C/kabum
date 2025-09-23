@@ -1,17 +1,17 @@
 <?php
 
 require_once __DIR__ . '/../Repositories/CustomerRepository.php';
-require_once __DIR__ . '/../Repositories/EnderecoRepository.php';
+require_once __DIR__ . '/../Repositories/AddressRepository.php';
 
 class CustomerService
 {
   private CustomerRepository $customerRepo;
-  private EnderecoRepository $enderecoRepo;
+  private AddressRepository $addressRepo;
 
   public function __construct()
   {
     $this->customerRepo = new CustomerRepository();
-    $this->enderecoRepo = new EnderecoRepository();
+    $this->addressRepo = new AddressRepository();
   }
 
   public function create(array $data): array
@@ -31,20 +31,21 @@ class CustomerService
     ]);
 
     if (!empty($data['addresses'])) {
-      $enderecos = array_map(function ($address) use ($customer) {
+      $address = array_map(function ($address) use ($customer) {
         return [
           'customer_id' => $customer['id'],
           'zip' => $address['zip'],
           'city' => $address['city'],
           'country' => $address['country'],
           'street' => $address['street'],
+          'state' => $address['state'],
           'neighborhood' => $address['neighborhood'],
           'number' => $address['number'],
         ];
       }, $data['addresses']);
 
-      $enderecosCriados = $this->enderecoRepo->createMany($enderecos);
-      $customer['addresses'] = $enderecosCriados;
+      $addressCriados = $this->addressRepo->createMany($address);
+      $customer['addresses'] = $addressCriados;
     }
 
     return $customer;
@@ -57,7 +58,7 @@ class CustomerService
       throw new Exception("Cliente não encontrado", 404);
     }
 
-    $customer['addresses'] = $this->enderecoRepo->find($id);
+    $customer['addresses'] = $this->addressRepo->find($id);
     return $customer;
   }
 
@@ -66,7 +67,7 @@ class CustomerService
     $customers = $this->customerRepo->all();
 
     foreach ($customers as &$customer) {
-      $customer['addresses'] = $this->enderecoRepo->getByCustomerId($customer['id']);
+      $customer['addresses'] = $this->addressRepo->getByCustomerId($customer['id']);
     }
 
     return $customers;
@@ -91,10 +92,10 @@ class CustomerService
     if (!empty($data['addresses'])) {
       foreach ($data['addresses'] as $address) {
         if (!empty($address['id'])) {
-          $data['addresses'] = $this->enderecoRepo->update($address['id'], $address);
+          $data['addresses'] = $this->addressRepo->update($address['id'], $address);
         } else {
           $address['customer_id'] = $id;
-          $data['addresses'] = $this->enderecoRepo->create($address);
+          $data['addresses'] = $this->addressRepo->create($address);
         }
       }
     }

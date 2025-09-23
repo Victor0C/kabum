@@ -24,7 +24,11 @@ class UpdateCustomerRequest implements RequestInterface
     }
 
     if (isset($data['rg']) && $data['rg'] !== '') {
-      $validated['rg'] = $data['rg'];
+      if (!preg_match('/^\d{9}$/', preg_replace('/\D/', '', $data['rg']))) {
+        $errors['rg'] = "O RG deve ter 9 dígitos numéricos.";
+      } else {
+        $validated['rg'] = $data['rg'];
+      }
     }
 
     if (isset($data['birth_date']) && $data['birth_date'] !== '') {
@@ -70,6 +74,10 @@ class UpdateCustomerRequest implements RequestInterface
 
           if (isset($address['street']) && $address['street'] !== '') {
             $validAddress['street'] = $address['street'];
+          }
+
+          if (isset($address['state']) && $address['state'] !== '') {
+            $validAddress['state'] = $address['state'];
           }
 
           if (isset($address['neighborhood']) && $address['neighborhood'] !== '') {

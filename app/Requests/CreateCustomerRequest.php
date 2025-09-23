@@ -23,8 +23,11 @@ class CreateCustomerRequest implements RequestInterface
       $validated['cpf'] = $data['cpf'];
     }
 
+
     if (empty($data['rg'])) {
       $errors['rg'] = "O RG é obrigatório.";
+    } elseif (!preg_match('/^\d{9}$/', preg_replace('/\D/', '', $data['rg']))) {
+      $errors['rg'] = "O RG deve ter 9 dígitos numéricos.";
     } else {
       $validated['rg'] = $data['rg'];
     }
@@ -76,6 +79,12 @@ class CreateCustomerRequest implements RequestInterface
           $validAddress['street'] = $address['street'];
         }
 
+        if (empty($address['state'])) {
+          $errors["addresses.$index.state"] = "O estado é obrigatório.";
+        } else {
+          $validAddress['state'] = $address['state'];
+        }
+
         if (empty($address['neighborhood'])) {
           $errors["addresses.$index.neighborhood"] = "O bairro é obrigatório.";
         } else {
@@ -95,7 +104,7 @@ class CreateCustomerRequest implements RequestInterface
     }
 
     if (!empty($errors)) {
-      throw new Exception(json_encode($errors), 422);
+      throw new ValidationException($errors);
     }
 
     return $validated;

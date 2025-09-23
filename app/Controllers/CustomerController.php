@@ -4,8 +4,7 @@ require_once __DIR__ . "/../Utils/RenderViews.php";
 require_once __DIR__ . "/../Requests/CreateCustomerRequest.php";
 require_once __DIR__ . "/../Requests/UpdateCustomerRequest.php";
 require_once __DIR__ . "/../Services/CustomerService.php";
-
-session_start();
+require_once __DIR__ . '/../Utils/Resquets.php';
 
 class CustomerController extends RenderViews
 {
@@ -31,27 +30,21 @@ class CustomerController extends RenderViews
     }
   }
 
+  public function viewCreateCustomer()
+  {
+    $this->loadView('Customers/create-update-customer');
+  }
+
   public function createCustomer()
   {
     try {
-      $requestData = $_POST;
+      $requestData = json_decode(file_get_contents('php://input'), true);
       $data = CreateCustomerRequest::validate($requestData);
       $customer = (new CustomerService)->create($data);
 
-      $_SESSION['msg'] = [
-        'type' => 'success',
-        'msg' => "Cliente cadastrado com sucesso",
-        'code' => 201
-      ];
-
-      header("Location: " . BASE_URL . "customer/" . $customer['id']);
-      exit;
+      jsonResponse($customer, 201);
     } catch (\Throwable $e) {
-      $_SESSION['msg'] = [
-        'type' => 'error',
-        'msg' => $e->getMessage(),
-        'code' => $e->getCode()
-      ];
+      handlerResponseErrors($e);
     }
   }
 

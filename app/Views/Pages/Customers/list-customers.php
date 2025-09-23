@@ -4,7 +4,7 @@
       <div class="card-header">
         <div class="d-flex justify-content-between aling-items-center">
           <h2 class="m-0 fs-3">Listagem dos clientes</h2>
-          <a class="btn btn-primary float-end"><i class="fa-solid fa-user-plus"></i></a>
+          <a href="/create" class="btn btn-primary float-end"><i class="fa-solid fa-user-plus"></i></a>
         </div>
       </div>
       <div class="card-body px-0 py-1">

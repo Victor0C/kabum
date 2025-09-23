@@ -11,9 +11,12 @@ class Core
 
   public function run()
   {
-    $url = '/';
-    isset($_GET['url']) ? $url .= $_GET['url'] : '';
-    ($url != '/') ? $url = rtrim($url, '/') : $url;
+    $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $url = rtrim($url, '/');
+    if ($url === '') {
+      $url = '/';
+    }
+
 
     $method = $_SERVER['REQUEST_METHOD'];
     $routerFound = false;
@@ -36,7 +39,7 @@ class Core
 
         $controller = new $currentController();
         $controller->$action($matches);
-        break; // rota encontrada, sai do loop
+        break;
       }
     }
 

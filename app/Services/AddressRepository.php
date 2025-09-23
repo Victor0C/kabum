@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/BaseRepository.php';
 
-class EnderecoRepository extends BaseRepository
+class AddressRepository extends BaseRepository
 {
-  protected string $table = 'enderecos';
+  protected string $table = 'addresses';
 
   public function getByCustomerId(int $customerId): array
   {
