@@ -38,9 +38,9 @@ class CustomerController extends RenderViews
       $data = CreateCustomerRequest::validate($requestData);
       $customer = (new CustomerService)->create($data);
 
-      jsonResponse($customer, 201);
+      Resquets::jsonResponse($customer, 201);
     } catch (\Throwable $e) {
-      handlerResponseErrors($e);
+      Resquets::handlerJsonResponseErrors($e);
     }
   }
 
@@ -63,9 +63,9 @@ class CustomerController extends RenderViews
       $data = UpdateCustomerRequest::validate($requestData);
       $customer = (new CustomerService)->update((int)$id, $data);
 
-      jsonResponse($customer, 200);
+      Resquets::jsonResponse($customer, 200);
     } catch (\Throwable $e) {
-      handlerResponseErrors($e);
+      Resquets::handlerJsonResponseErrors($e);
     }
   }
 
@@ -74,9 +74,9 @@ class CustomerController extends RenderViews
     try {
       $id = $params['id'] ?? 0;
       (new CustomerService)->delete((int)$id);
-      jsonResponse([], 204);
+      Resquets::jsonResponse([], 204);
     } catch (\Throwable $e) {
-      handlerResponseErrors($e);
+      Resquets::handlerJsonResponseErrors($e);
     }
   }
 
@@ -85,9 +85,9 @@ class CustomerController extends RenderViews
       $id = $params['id'] ?? 0;
       $customerId = $params['customerId'] ?? 0;
       (new CustomerService)->deleteAddress((int)$id, (int) $customerId);
-      jsonResponse([], 204);
+      Resquets::jsonResponse([], 204);
     } catch (\Throwable $e) {
-      handlerResponseErrors($e);
+      Resquets::handlerJsonResponseErrors($e);
     }
   }
 }
