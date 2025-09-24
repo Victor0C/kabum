@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row my-2">
   <div class="col-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
@@ -60,7 +60,7 @@
           <?php foreach ($customer['addresses'] as $index => $address): ?>
             <div class="card mb-2">
               <div class="card-header">
-                Endereço <?= $index + 1 ?>
+                <?= ($index == 0) ? 'Endereço' : 'Outro endereço' ?>
               </div>
               <div class="card-body">
                 <p><strong>CEP:</strong> <?= htmlspecialchars($address['zip']) ?></p>
@@ -75,7 +75,43 @@
         <?php else: ?>
           <p>Este cliente não possui endereços cadastrados.</p>
         <?php endif; ?>
+
+        <div class="d-flex justify-content-end">
+          <button id="deleteCustomerBtn" class="btn btn-danger mt-1">Deletar cliente</button>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  const deleteBtn = document.getElementById('deleteCustomerBtn');
+
+  deleteBtn.addEventListener('click', function() {
+    if (!confirm('Tem certeza que deseja deletar este cliente?')) {
+      return;
+    }
+
+    const customerId = <?= (int)$customer['id'] ?>;
+
+    fetch(`/delete/customer/${customerId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(async response => {
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          alert(errorData.message || 'Erro ao deletar cliente.');
+          return;
+        }
+        alert('Cliente deletado com sucesso!');
+        window.location.href = '/';
+      })
+      .catch(err => {
+        alert('Erro não catalogado');
+      });
+  });
+</script>

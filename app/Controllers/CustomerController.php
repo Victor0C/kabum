@@ -69,18 +69,14 @@ class CustomerController extends RenderViews
     }
   }
 
-  public function deleteCustomer()
+  public function deleteCustomer(array $params)
   {
     try {
-      $id = $_POST['id'] ?? 0;
+      $id = $params['id'] ?? 0;
       (new CustomerService)->delete((int)$id);
-      header("Location: " . BASE_URL . "customers");
+      jsonResponse([], 204);
     } catch (\Throwable $e) {
-      $_SESSION['msg'] = [
-        'type' => 'error',
-        'msg' => $e->getMessage(),
-        'code' => $e->getCode()
-      ];
+      handlerResponseErrors($e);
     }
   }
 }

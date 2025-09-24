@@ -1,10 +1,15 @@
 <?php
 require_once __DIR__ . '/../Exceptions/ValidationException.php';
 
-function jsonResponse($body, int $statusCode = 200): void
+function jsonResponse($body = null, int $statusCode = 200)
 {
-  header('Content-Type: application/json');
   http_response_code($statusCode);
+
+  if ($statusCode === 204) {
+    exit;
+  }
+
+  header('Content-Type: application/json');
 
   if (!is_string($body)) {
     $body = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

@@ -56,7 +56,11 @@ $isUpdate = isset($customer) && !empty($customer);
             <input type="hidden" name="addresses[<?= $index ?>][id]" value="<?= $address['id'] ?>">
           <?php endif; ?>
 
-          <h5>Endereço</h5>
+          <?php if ($index != 0): ?>
+            <hr>
+          <?php endif; ?>
+
+          <h5><?= ($index == 0) ? 'Endereço' : 'Outro endereço' ?></h5>
           <div class="address-block">
             <div class="mb-2">
               <label for="addresses[<?= $index ?>][zip]" class="form-label">CEP</label>
@@ -100,9 +104,7 @@ $isUpdate = isset($customer) && !empty($customer);
                 value="<?= htmlspecialchars($address['country'] ?? 'Brasil') ?>" placeholder="Brasil">
             </div>
           </div>
-          <?php if ($index != 0): ?>
-            <hr>
-          <?php endif; ?>
+
 
         <?php endforeach; ?>
       </div>
@@ -228,7 +230,7 @@ $isUpdate = isset($customer) && !empty($customer);
         window.location.href = <?= $isUpdate ? "'/customer/" . (int)$customer['id'] . "'" : "'/'" ?>;
       })
       .catch(err => {
-        alert('Ocorreu um erro ao enviar o formulário.');
+        alert('Erro não catalogado');
       });
   });
 </script>
