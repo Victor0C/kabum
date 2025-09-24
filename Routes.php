@@ -15,6 +15,11 @@ class Routes extends RouterUtils
       'action' => 'AuthController@login'
     ],
     [
+      'method' => 'POST',
+      'path' => '/logout',
+      'action' => 'AuthController@logout'
+    ],
+    [
       'method' => 'GET',
       'path' => '/',
       'action' => 'CustomerController@viewCustomers',

@@ -24,6 +24,7 @@ class AuthService
     }
 
     $_SESSION['userId'] = $user['id'];
+    $_SESSION['userName'] = $user['name'];
   }
 
   public function logout(): void

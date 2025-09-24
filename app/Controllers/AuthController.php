@@ -23,4 +23,15 @@ class AuthController extends RenderViews
       header('Location: /login');
     }
   }
+
+  public function logout()
+  {
+    try {
+      (new AuthService)->logout();
+      header('Location: /');
+    } catch (\Throwable $e) {
+      Resquets::handlerSessionResponseErrors($e);
+      header('Location: /login');
+    }
+  }
 }
