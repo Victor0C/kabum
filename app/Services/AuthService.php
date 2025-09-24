@@ -23,7 +23,7 @@ class AuthService
       throw new Exception("Credenciais inválidas", 401);
     }
 
-    $_SESSION['useId'] = $user['id'];
+    $_SESSION['userId'] = $user['id'];
   }
 
   public function logout(): void
