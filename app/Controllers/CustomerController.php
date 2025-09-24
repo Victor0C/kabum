@@ -79,4 +79,15 @@ class CustomerController extends RenderViews
       handlerResponseErrors($e);
     }
   }
+
+  public function deleteAddress(array $params){
+    try {
+      $id = $params['id'] ?? 0;
+      $customerId = $params['customerId'] ?? 0;
+      (new CustomerService)->deleteAddress((int)$id, (int) $customerId);
+      jsonResponse([], 204);
+    } catch (\Throwable $e) {
+      handlerResponseErrors($e);
+    }
+  }
 }

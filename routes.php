@@ -8,4 +8,5 @@ $routes = [
   ['GET', '/update/customer/{id}', 'CustomerController@viewUpdateCustomer'],
   ['PUT', '/update/customer/{id}', 'CustomerController@updateCustomer'],
   ["DELETE", '/delete/customer/{id}', 'CustomerController@deleteCustomer'],
+  ["DELETE", '/delete/address/{id}/customer/{customerId}', 'CustomerController@deleteAddress'],
 ];

@@ -74,7 +74,7 @@ class CustomerService
   }
 
   public function update(int $id, array $data): array
-  {;
+  {
     $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg'], $id);
 
     if ($existing) {
@@ -104,9 +104,44 @@ class CustomerService
     return $customer;
   }
 
-  public function delete(int $id): bool
+  public function delete(int $id): void
   {
     $this->find($id);
-    return $this->customerRepo->delete($id);
+    $this->customerRepo->delete($id);
+  }
+
+
+  public function findAddress(int $id): ?array
+  {
+    $customer = $this->addressRepo->find($id);
+    if (!$customer) {
+      throw new Exception("Endereço não encontrado", 404);
+    }
+
+    $customer['addresses'] = $this->addressRepo->getByCustomerId($id);
+    return $customer;
+  }
+
+  public function deleteAddress(int $id, int $customerId): void
+  {
+    $customer = $this->find($customerId);
+
+    if (count($customer['addresses']) == 0) {
+      throw new Exception("O usuário não pode ficar sem endereço", 422);
+    }
+
+    $found = false;
+    foreach ($customer['addresses'] as $key => $address) {
+      if ($address['id'] == $id) {
+        $found = true;
+        break;
+      }
+    }
+
+    if (!$found) {
+      throw new Exception("Endereço não encontrado", 404);
+    }
+
+    $this->addressRepo->delete($id);
   }
 }

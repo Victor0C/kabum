@@ -60,7 +60,16 @@
           <?php foreach ($customer['addresses'] as $index => $address): ?>
             <div class="card mb-2">
               <div class="card-header">
-                <?= ($index == 0) ? 'Endereço' : 'Outro endereço' ?>
+                <div class="d-flex justify-content-between align-items-center">
+                  <?= ($index == 0) ? 'Endereço' : 'Outro endereço' ?>
+
+                  <?php if (count($customer['addresses']) > 1): ?>
+                    <button type="button" class="btn btn-danger delete-address-btn" data-id="<?= $address['id'] ?? '0' ?>">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  <?php endif; ?>
+
+                </div>
               </div>
               <div class="card-body">
                 <p><strong>CEP:</strong> <?= htmlspecialchars($address['zip']) ?></p>
@@ -86,9 +95,9 @@
 </div>
 
 <script>
-  const deleteBtn = document.getElementById('deleteCustomerBtn');
+  const deleteCustomerBtn = document.getElementById('deleteCustomerBtn');
 
-  deleteBtn.addEventListener('click', function() {
+  deleteCustomerBtn.addEventListener('click', function() {
     if (!confirm('Tem certeza que deseja deletar este cliente?')) {
       return;
     }
@@ -113,5 +122,34 @@
       .catch(err => {
         alert('Erro não catalogado');
       });
+  });
+
+
+  document.querySelectorAll('.delete-address-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (!confirm('Tem certeza que deseja deletar este endereço?')) return;
+
+      const customerId = <?= (int)$customer['id'] ?>;
+      const addressId = btn.getAttribute('data-id');
+
+      fetch(`/delete/address/${addressId}/customer/${customerId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(async response => {
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            alert(errorData.message || 'Erro ao deletar endereço.');
+            return;
+          }
+          alert('Endereço deletado com sucesso!');
+          window.location.reload();
+        })
+        .catch(err => {
+          alert('Erro não catalogado');
+        });
+    });
   });
 </script>
