@@ -2,7 +2,7 @@
 $isUpdate = isset($customer) && !empty($customer);
 ?>
 
-<div class="card my-2">
+<div class="card my-2 w-100">
   <div class="card-header bg-primary text-white">
     <?= $isUpdate ? 'Atualizar Cliente' : 'Criar Novo Cliente' ?>
   </div>

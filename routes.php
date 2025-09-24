@@ -1,6 +1,8 @@
 <?php
 
 $routes = [
+  ['GET', '/login', 'AuthController@viewLogin'],
+  ['POST', '/login', 'AuthController@login'],
   ['GET', '/', 'CustomerController@viewCustomers'],
   ['GET', '/create', 'CustomerController@viewCreateCustomer'],
   ['POST', '/create', 'CustomerController@createCustomer'],
