@@ -74,8 +74,8 @@ class CustomerService
   }
 
   public function update(int $id, array $data): array
-  {
-    $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg']);
+  {;
+    $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg'], $id);
 
     if ($existing) {
       throw new Exception("Já existe outro cliente cadastrado com este CPF ou RG.", 422);
@@ -100,6 +100,7 @@ class CustomerService
       }
     }
 
+    $customer['addresses'] = $data['addresses'];
     return $customer;
   }
 

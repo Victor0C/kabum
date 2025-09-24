@@ -55,10 +55,12 @@ class CreateCustomerRequest implements RequestInterface
       foreach ($data['addresses'] as $index => $address) {
         $validAddress = [];
 
-        if (empty($address['cep'])) {
+        if (empty($address['zip'])) {
           $errors["addresses.$index.zip"] = "O CEP é obrigatório.";
+        } elseif (!preg_match('/^\d{8}$/', preg_replace('/\D/', '', $address['zip']))) {
+          $errors['zip'] = "O Cep deve ter 8 dígitos numéricos.";
         } else {
-          $validAddress['zip'] = $address['cep'];
+          $validAddress['zip'] = $address['zip'];
         }
 
         if (empty($address['city'])) {
@@ -91,9 +93,7 @@ class CreateCustomerRequest implements RequestInterface
           $validAddress['neighborhood'] = $address['neighborhood'];
         }
 
-        if (empty($address['number'])) {
-          $errors["addresses.$index.number"] = "O número é obrigatório.";
-        } else {
+        if (!empty($address['number']) && $address['number'] !== '') {
           $validAddress['number'] = $address['number'];
         }
 

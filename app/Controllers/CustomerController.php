@@ -21,11 +21,8 @@ class CustomerController extends RenderViews
       $customer = (new CustomerService)->find((int) $id);
       $this->loadView('Customers/customers-details', ['customer' => $customer]);
     } catch (\Throwable $e) {
-      $_SESSION['msg'] = [
-        'type' => 'error',
-        'msg' => $e->getMessage(),
-        'code' => $e->getCode()
-      ];
+      header('Location: /');
+      exit;
     }
   }
 
@@ -47,32 +44,28 @@ class CustomerController extends RenderViews
     }
   }
 
-  public function updateCustomer()
+  public function viewUpdateCustomer(array $params)
   {
     try {
-      $requestData = $_POST;
-      $id = $requestData['id'] ?? 0;
-      if (!$id) {
-        throw new Exception("ID do cliente não informado.", 400);
-      }
-
+      $id = $params['id'] ?? 0;
+      $customer = (new CustomerService)->find((int) $id);
+      $this->loadView('Customers/create-update-customer', ['customer' => $customer]);
+    } catch (\Throwable $e) {
+      header('Location: /');
+      exit;
+    }
+  }
+  public function updateCustomer(array $params)
+  {
+    try {
+      $id = $params['id'] ?? 0;
+      $requestData = json_decode(file_get_contents('php://input'), true);
       $data = UpdateCustomerRequest::validate($requestData);
       $customer = (new CustomerService)->update((int)$id, $data);
 
-      $_SESSION['msg'] = [
-        'type' => 'success',
-        'msg' => "Cliente atualizado com sucesso",
-        'code' => 200
-      ];
-
-      header("Location: " . BASE_URL . "customer/" . $customer['id']);
-      exit;
+      jsonResponse($customer, 200);
     } catch (\Throwable $e) {
-      $_SESSION['msg'] = [
-        'type' => 'error',
-        'msg' => $e->getMessage(),
-        'code' => $e->getCode()
-      ];
+      handlerResponseErrors($e);
     }
   }
 

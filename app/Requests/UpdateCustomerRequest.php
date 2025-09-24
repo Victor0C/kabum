@@ -48,46 +48,47 @@ class UpdateCustomerRequest implements RequestInterface
     }
 
     if (isset($data['addresses'])) {
-      if (!is_array($data['addresses']) || empty($data['addresses'])) {
-        $errors['addresses'] = "É necessário informar ao menos um endereço.";
-      } else {
-        $validated['addresses'] = [];
-        foreach ($data['addresses'] as $index => $address) {
-          if (!isset($address['id'])) {
-            $errors["addresses.$index.id"] = "O ID do endereço é obrigatório.";
-            continue;
-          }
-          
-          $validAddress = ['id' => $address['id']];
+      $validated['addresses'] = [];
+      foreach ($data['addresses'] as $index => $address) {
+        $validAddress = [];
 
-          if (isset($address['cep']) && $address['cep'] !== '') {
-            $validAddress['zip'] = $address['cep'];
-          }
+        if (isset($address['id']) && $address['id'] !== '') {
+          $validAddress['id'] = $address['id'];
+        }
 
-          if (isset($address['city']) && $address['city'] !== '') {
-            $validAddress['city'] = $address['city'];
+        if (isset($address['zip']) && $address['zip'] !== '') {
+          if (!preg_match('/^\d{8}$/', preg_replace('/\D/', '', $address['zip']))) {
+            $errors['zip'] = "O Cep deve ter 8 dígitos numéricos.";
+          } else {
+            $validAddress['zip'] = $address['zip'];
           }
+        }
 
-          if (isset($address['country']) && $address['country'] !== '') {
-            $validAddress['country'] = $address['country'];
-          }
+        if (isset($address['city']) && $address['city'] !== '') {
+          $validAddress['city'] = $address['city'];
+        }
 
-          if (isset($address['street']) && $address['street'] !== '') {
-            $validAddress['street'] = $address['street'];
-          }
+        if (isset($address['country']) && $address['country'] !== '') {
+          $validAddress['country'] = $address['country'];
+        }
 
-          if (isset($address['state']) && $address['state'] !== '') {
-            $validAddress['state'] = $address['state'];
-          }
+        if (isset($address['street']) && $address['street'] !== '') {
+          $validAddress['street'] = $address['street'];
+        }
 
-          if (isset($address['neighborhood']) && $address['neighborhood'] !== '') {
-            $validAddress['neighborhood'] = $address['neighborhood'];
-          }
+        if (isset($address['state']) && $address['state'] !== '') {
+          $validAddress['state'] = $address['state'];
+        }
 
-          if (isset($address['number']) && $address['number'] !== '') {
-            $validAddress['number'] = $address['number'];
-          }
+        if (isset($address['neighborhood']) && $address['neighborhood'] !== '') {
+          $validAddress['neighborhood'] = $address['neighborhood'];
+        }
 
+        if (isset($address['number']) && $address['number'] !== '') {
+          $validAddress['number'] = $address['number'];
+        }
+
+        if (!empty($validAddress)) {
           $validated['addresses'][] = $validAddress;
         }
       }

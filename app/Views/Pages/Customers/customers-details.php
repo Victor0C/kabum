@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h2 class="m-0 fs-3">Detalhes do Cliente</h2>
-        <a href="/create" class="btn btn-warning">
+        <a href="/update/customer/<?= $customer['id'] ?>" class="btn btn-warning">
           <i class="fa-solid fa-pen"></i>
         </a>
       </div>
@@ -65,7 +65,7 @@
               <div class="card-body">
                 <p><strong>CEP:</strong> <?= htmlspecialchars($address['zip']) ?></p>
                 <p><strong>Rua:</strong> <?= htmlspecialchars($address['street']) ?></p>
-                <p><strong>Número:</strong> <?= htmlspecialchars($address['number']) ?></p>
+                <p><strong>Número:</strong> <?= !empty($address['number']) ? htmlspecialchars($address['number']) : 'S/n' ?></p>
                 <p><strong>Bairro:</strong> <?= htmlspecialchars($address['neighborhood']) ?></p>
                 <p><strong>Cidade:</strong> <?= htmlspecialchars($address['city']) ?> / <?= htmlspecialchars($address['state']) ?></p>
                 <p><strong>País:</strong> <?= htmlspecialchars($address['country']) ?></p>
