@@ -1,14 +1,64 @@
-O projeto foi desenvolvido com php8.4
+# Projeto Kabum
 
-Para rodar o projeto:
+Sistema desenvolvido em **PHP 8.4**.
 
-1 - Crie o arquivo .env na raíz do projeto e preencha as informações nele conforme o .env.example
-2 - Na pasta do projeto, rode "php DatabaseSeeder.php"
-3 - Suba o servidor com "php -S localhost:8000 -t public/"
+---
 
-Após rodar o projeto, utilize o seguinte usuário para acessar o sistema
+## Requisitos
 
-email: admin@admin.com
-senha: 123
+- PHP 8.4
+- MySQL ou MariaDB
+- Composer (opcional, caso precise de pacotes)
 
-Para rodar os testes, rode "php app/Tests/Test.php"
+---
+
+## Configuração do Projeto
+
+1. Crie o arquivo `.env` na raiz do projeto e preencha as informações conforme o `.env.example`:
+
+```env
+BASE_URL=http://127.0.0.1/
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASS=
+DB_NAME=kabum
+```
+
+3. Popule o banco de dados e crie as tabelas executando o seeder:
+
+```bash
+php DatabaseSeeder.php
+```
+
+4. Suba o servidor PHP local:
+
+```bash
+php -S localhost:8000 -t public/
+```
+
+---
+
+## Usuário de teste
+
+Após rodar o seeder, você pode acessar o sistema com:
+
+- **Email:** admin@admin.com  
+- **Senha:** 123
+
+---
+
+## Rodando os Testes
+
+Para executar os testes automatizados, rode:
+
+```bash
+php app/Tests/Test.php
+```
+
+Todos os testes irão verificar funcionalidades do `CustomerService` e do `AuthService`.
+
+---
+
+## Observações
+
+- Certifique-se de que o banco definido no `.env` exista antes de rodar o `DatabaseSeeder.php`.  
