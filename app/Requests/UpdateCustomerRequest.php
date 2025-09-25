@@ -24,11 +24,7 @@ class UpdateCustomerRequest implements RequestInterface
     }
 
     if (isset($data['rg']) && $data['rg'] !== '') {
-      if (!preg_match('/^\d{9}$/', preg_replace('/\D/', '', $data['rg']))) {
-        $errors['rg'] = "O RG deve ter 9 dígitos numéricos.";
-      } else {
-        $validated['rg'] = $data['rg'];
-      }
+      $validated['rg'] = $data['rg'];
     }
 
     if (isset($data['birth_date']) && $data['birth_date'] !== '') {
