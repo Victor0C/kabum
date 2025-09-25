@@ -7,7 +7,7 @@ Sistema desenvolvido em **PHP 8.4**.
 ## Requisitos
 
 - PHP 8.4
-- MySQL ou MariaDB
+- MySQL
 
 ---
 
