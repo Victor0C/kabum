@@ -7,7 +7,7 @@ $isUpdate = isset($customer) && !empty($customer);
     <?= $isUpdate ? 'Atualizar Cliente' : 'Criar Novo Cliente' ?>
   </div>
   <div class="card-body">
-    <form>
+    <form id="form-create-update-customer">
       <?php if ($isUpdate): ?>
         <input type="hidden" name="id" value="<?= (int)$customer['id'] ?>">
       <?php endif; ?>
@@ -187,7 +187,7 @@ $isUpdate = isset($customer) && !empty($customer);
   });
 
 
-  const form = document.querySelector('form');
+  const form = document.getElementById('form-create-update-customer');
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -221,6 +221,7 @@ $isUpdate = isset($customer) && !empty($customer);
         body: JSON.stringify(data)
       })
       .then(async response => {
+        console.log('oioo');
         if (!response.ok) {
           const errorData = await response.json();
           alert(errorData.message || 'Erro não catalogado');
