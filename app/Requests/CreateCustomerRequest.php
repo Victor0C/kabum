@@ -26,8 +26,6 @@ class CreateCustomerRequest implements RequestInterface
 
     if (empty($data['rg'])) {
       $errors['rg'] = "O RG é obrigatório.";
-    } elseif (!preg_match('/^\d{9}$/', preg_replace('/\D/', '', $data['rg']))) {
-      $errors['rg'] = "O RG deve ter 9 dígitos numéricos.";
     } else {
       $validated['rg'] = $data['rg'];
     }

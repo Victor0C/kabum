@@ -28,7 +28,7 @@ $isUpdate = isset($customer) && !empty($customer);
       <div class="mb-3">
         <label for="rg" class="form-label">RG</label>
         <input type="text" class="form-control" id="rg" name="rg" placeholder="Apenas números" required
-          inputmode="numeric" pattern="[0-9]{9}" minlength="9" maxlength="9"
+          inputmode="numeric"
           value="<?= $isUpdate ? htmlspecialchars($customer['rg']) : '' ?>">
       </div>
 
