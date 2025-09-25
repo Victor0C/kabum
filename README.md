@@ -10,3 +10,5 @@ Após rodar o projeto, utilize o seguinte usuário para acessar o sistema
 
 email: admin@admin.com
 senha: 123
+
+Para rodar os testes, rode "php app/Tests/Test.php"
