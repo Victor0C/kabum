@@ -21,7 +21,7 @@ $isUpdate = isset($customer) && !empty($customer);
       <div class="mb-3">
         <label for="cpf" class="form-label">CPF</label>
         <input type="text" class="form-control" id="cpf" name="cpf" required placeholder="Apenas números"
-          inputmode="numeric" minlength="11" maxlength="11"
+          inputmode="numeric" minlength="11" maxlength="11" pattern="\d{11}"
           value="<?= $isUpdate ? htmlspecialchars($customer['cpf']) : '' ?>">
       </div>
 
