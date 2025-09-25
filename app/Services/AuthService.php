@@ -3,6 +3,8 @@
 require_once __DIR__ . '/../Repositories/UserRepository.php';
 require_once __DIR__ . '/../Interfaces/AuthServiceInterface.php';
 require_once __Dir__ . "/../Utils/Injections.php";
+require_once __DIR__ . '/../Interfaces/UserRepositoryInterface.php';
+require_once __DIR__ . '/../Exceptions/InvalidCredentialsException.php';
 
 class AuthService implements AuthServiceInterface
 {
@@ -16,11 +18,11 @@ class AuthService implements AuthServiceInterface
     $user = $this->userRepo->findByMail($mail);
 
     if(!$user){
-      throw new Exception("Credenciais inválidas", 401);
+      throw new InvalidCredentialsException();
     }
 
     if (!password_verify($password, $user['password'])) {
-      throw new Exception("Credenciais inválidas", 401);
+      throw new InvalidCredentialsException();
     }
 
     $_SESSION['userId'] = $user['id'];
