@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../../Database.php';
+require_once __DIR__ . '/../Interfaces/BaseRepositoryInterface.php';
 
-abstract class BaseRepository
+abstract class BaseRepository implements BaseRepositoryInterface
 {
   protected PDO $pdo;
   protected string $table;

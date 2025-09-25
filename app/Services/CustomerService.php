@@ -2,16 +2,23 @@
 
 require_once __DIR__ . '/../Repositories/CustomerRepository.php';
 require_once __DIR__ . '/../Repositories/AddressRepository.php';
+require_once __DIR__ . '/../Interfaces/CustomerServiceInterface.php';
+require_once __DIR__ . '/../Utils/Injections.php';
+require_once __DIR__ . '/../Interfaces/CustomerRepositoryInterface.php';
+require_once __DIR__ . '/../Interfaces/AddressRepositoryInterface.php';
+require_once __DIR__ . '/../Exceptions/CpfOrRgAlreadyUse.php';
+require_once __DIR__ . '/../Exceptions/UserNotFound.php';
+require_once __DIR__ . '/../Exceptions/AddressNotFound.php';
+require_once __DIR__ . '/../Exceptions/UserWithoutAddressException.php';
 
-class CustomerService
+class CustomerService implements CustomerServiceInterface
 {
-  private CustomerRepository $customerRepo;
-  private AddressRepository $addressRepo;
-
-  public function __construct()
-  {
-    $this->customerRepo = new CustomerRepository();
-    $this->addressRepo = new AddressRepository();
+  public function __construct(
+    private ?CustomerRepositoryInterface $customerRepo = null,
+    private ?AddressRepositoryInterface $addressRepo = null
+  ) {
+    $this->customerRepo = $customerRepo ?? Injections::fire('Interfaces/CustomerRepositoryInterface.php');
+    $this->addressRepo = $addressRepo ?? Injections::fire('Interfaces/AddressRepositoryInterface.php');
   }
 
   public function create(array $data): array
@@ -19,7 +26,7 @@ class CustomerService
     $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg']);
 
     if ($existing) {
-      throw new Exception("Já existe um cliente cadastrado com este CPF ou RG.", 422);
+      throw new CpfOrRgAlreadyUse();
     }
 
     $customer = $this->customerRepo->create([
@@ -55,7 +62,7 @@ class CustomerService
   {
     $customer = $this->customerRepo->find($id);
     if (!$customer) {
-      throw new Exception("Cliente não encontrado", 404);
+      throw new UserNotFound();
     }
 
     $customer['addresses'] = $this->addressRepo->getByCustomerId($id);
@@ -78,7 +85,7 @@ class CustomerService
     $existing = $this->customerRepo->verifyCPFAndRG($data['cpf'], $data['rg'], $id);
 
     if ($existing) {
-      throw new Exception("Já existe outro cliente cadastrado com este CPF ou RG.", 422);
+      throw new CpfOrRgAlreadyUse();
     }
 
     $customer = $this->customerRepo->update($id, [
@@ -115,7 +122,7 @@ class CustomerService
   {
     $customer = $this->addressRepo->find($id);
     if (!$customer) {
-      throw new Exception("Endereço não encontrado", 404);
+      throw new AddressNotFound();
     }
 
     $customer['addresses'] = $this->addressRepo->getByCustomerId($id);
@@ -127,7 +134,7 @@ class CustomerService
     $customer = $this->find($customerId);
 
     if (count($customer['addresses']) == 0) {
-      throw new Exception("O usuário não pode ficar sem endereço", 422);
+      throw new UserWithoutAddressException();
     }
 
     $found = false;
@@ -139,7 +146,7 @@ class CustomerService
     }
 
     if (!$found) {
-      throw new Exception("Endereço não encontrado", 404);
+      throw new AddressNotFound();
     }
 
     $this->addressRepo->delete($id);

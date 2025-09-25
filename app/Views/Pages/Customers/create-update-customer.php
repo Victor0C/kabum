@@ -7,7 +7,7 @@ $isUpdate = isset($customer) && !empty($customer);
     <?= $isUpdate ? 'Atualizar Cliente' : 'Criar Novo Cliente' ?>
   </div>
   <div class="card-body">
-    <form>
+    <form id="form-create-update-customer">
       <?php if ($isUpdate): ?>
         <input type="hidden" name="id" value="<?= (int)$customer['id'] ?>">
       <?php endif; ?>
@@ -21,7 +21,7 @@ $isUpdate = isset($customer) && !empty($customer);
       <div class="mb-3">
         <label for="cpf" class="form-label">CPF</label>
         <input type="text" class="form-control" id="cpf" name="cpf" required placeholder="Apenas números"
-          inputmode="numeric" minlength="11" maxlength="11"
+          inputmode="numeric" minlength="11" maxlength="11" pattern="\d{11}"
           value="<?= $isUpdate ? htmlspecialchars($customer['cpf']) : '' ?>">
       </div>
 
@@ -187,7 +187,7 @@ $isUpdate = isset($customer) && !empty($customer);
   });
 
 
-  const form = document.querySelector('form');
+  const form = document.getElementById('form-create-update-customer');
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -221,6 +221,7 @@ $isUpdate = isset($customer) && !empty($customer);
         body: JSON.stringify(data)
       })
       .then(async response => {
+        console.log('oioo');
         if (!response.ok) {
           const errorData = await response.json();
           alert(errorData.message || 'Erro não catalogado');
