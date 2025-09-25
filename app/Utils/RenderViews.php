@@ -1,10 +1,10 @@
 <?php
 
-class RenderView
+class RenderViews
 {
   private $layout = "Default";
 
-  public function loadView($view, $args)
+  public function loadView($view, $args = [])
   {
     extract($args);
     require_once __DIR__ . "/../Views/layouts/$this->layout/header.php";
