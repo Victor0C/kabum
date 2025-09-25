@@ -5,12 +5,20 @@ require_once __DIR__ . "/../Requests/CreateCustomerRequest.php";
 require_once __DIR__ . "/../Requests/UpdateCustomerRequest.php";
 require_once __DIR__ . "/../Services/CustomerService.php";
 require_once __DIR__ . '/../Utils/Resquets.php';
+require_once __Dir__ . "/../Utils/Injections.php";
+require_once __DIR__ . "/../Interfaces/CustomerServiceInterface.php";
 
 class CustomerController extends RenderViews
 {
+
+  public function __construct(private ?CustomerServiceInterface $customerService = null)
+  {
+    $this->customerService = $customerService ?? Injections::fire('Interfaces/CustomerServiceInterface.php');
+  }
+
   public function viewCustomers()
   {
-    $customers = (new CustomerService)->getAll();
+    $customers = $this->customerService->getAll();
     $this->loadView('Customers/list-customers', ['customers' => $customers]);
   }
 
@@ -18,7 +26,7 @@ class CustomerController extends RenderViews
   {
     try {
       $id = $params['id'] ?? 0;
-      $customer = (new CustomerService)->find((int) $id);
+      $customer = $this->customerService->find((int) $id);
       $this->loadView('Customers/customers-details', ['customer' => $customer]);
     } catch (\Throwable $e) {
       header('Location: /');
@@ -36,7 +44,7 @@ class CustomerController extends RenderViews
     try {
       $requestData = json_decode(file_get_contents('php://input'), true);
       $data = CreateCustomerRequest::validate($requestData);
-      $customer = (new CustomerService)->create($data);
+      $customer = $this->customerService->create($data);
 
       Resquets::jsonResponse($customer, 201);
     } catch (\Throwable $e) {
@@ -48,7 +56,7 @@ class CustomerController extends RenderViews
   {
     try {
       $id = $params['id'] ?? 0;
-      $customer = (new CustomerService)->find((int) $id);
+      $customer = $this->customerService->find((int) $id);
       $this->loadView('Customers/create-update-customer', ['customer' => $customer]);
     } catch (\Throwable $e) {
       header('Location: /');
@@ -61,7 +69,7 @@ class CustomerController extends RenderViews
       $id = $params['id'] ?? 0;
       $requestData = json_decode(file_get_contents('php://input'), true);
       $data = UpdateCustomerRequest::validate($requestData);
-      $customer = (new CustomerService)->update((int)$id, $data);
+      $customer = $this->customerService->update((int)$id, $data);
 
       Resquets::jsonResponse($customer, 200);
     } catch (\Throwable $e) {
@@ -73,7 +81,7 @@ class CustomerController extends RenderViews
   {
     try {
       $id = $params['id'] ?? 0;
-      (new CustomerService)->delete((int)$id);
+      $this->customerService->delete((int)$id);
       Resquets::jsonResponse([], 204);
     } catch (\Throwable $e) {
       Resquets::handlerJsonResponseErrors($e);
@@ -84,7 +92,7 @@ class CustomerController extends RenderViews
     try {
       $id = $params['id'] ?? 0;
       $customerId = $params['customerId'] ?? 0;
-      (new CustomerService)->deleteAddress((int)$id, (int) $customerId);
+      $this->customerService->deleteAddress((int)$id, (int) $customerId);
       Resquets::jsonResponse([], 204);
     } catch (\Throwable $e) {
       Resquets::handlerJsonResponseErrors($e);

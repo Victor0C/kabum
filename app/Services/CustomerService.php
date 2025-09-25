@@ -2,16 +2,17 @@
 
 require_once __DIR__ . '/../Repositories/CustomerRepository.php';
 require_once __DIR__ . '/../Repositories/AddressRepository.php';
+require_once __DIR__ . '/../Interfaces/CustomerServiceInterface.php';
+require_once __DIR__ . '/../Utils/Injections.php';
 
-class CustomerService
+class CustomerService implements CustomerServiceInterface
 {
-  private CustomerRepository $customerRepo;
-  private AddressRepository $addressRepo;
-
-  public function __construct()
-  {
-    $this->customerRepo = new CustomerRepository();
-    $this->addressRepo = new AddressRepository();
+  public function __construct(
+    private ?CustomerRepository $customerRepo = null,
+    private ?AddressRepository $addressRepo = null
+  ) {
+    $this->customerRepo = $customerRepo ?? Injections::fire('Interfaces/CustomerRepositoryInterface.php');
+    $this->addressRepo = $addressRepo ?? Injections::fire('Interfaces/AddressRepositoryInterface.php');
   }
 
   public function create(array $data): array

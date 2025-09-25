@@ -1,14 +1,14 @@
 <?php
 
 require_once __DIR__ . '/../Repositories/UserRepository.php';
+require_once __DIR__ . '/../Interfaces/AuthServiceInterface.php';
+require_once __Dir__ . "/../Utils/Injections.php";
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
-  private UserRepository $userRepo;
-
-  public function __construct()
+  public function __construct(private ?UserRepositoryInterface $userRepo = null)
   {
-    $this->userRepo = new UserRepository();
+    $this->userRepo = $userRepo ?? Injections::fire('Interfaces/UserRepositoryInterface.php');
   }
 
   public function login(string $mail, string $password): void
